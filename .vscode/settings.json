@@ -1,0 +1,12 @@
+{
+    "cSpell.words": [
+        "EEPROM",
+        "PROGMEM"
+    ],
+    "files.associations": {
+        "array": "cpp",
+        "xstring": "cpp",
+        "xutility": "cpp",
+        "stdint.h": "c"
+    }
+}

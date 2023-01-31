@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "arduino:avrisp",
+    "sketch": "dmd_doublebuffer.ino",
+    "port": "COM4"
+}
