@@ -1,7 +1,7 @@
 # Programmable Display using Arduino and Flutter
 
-![Project Image](image/1690152123927.jpg)
-![Project Image](image/1690152148174.jpg)
+![Project Image](images/1690152123927.jpg)
+![Project Image](images/1690152148174.jpg)
 
 ## Description
 
