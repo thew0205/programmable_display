@@ -5,12 +5,14 @@
 #define WORD_SIZE_INCREMENTAL (5)
 
 SwitchesScreen::SwitchesScreen(byte pixelsWide, byte pixelsHigh)
-    : dmd(pixelsWide, pixelsHigh), width(dmd.width), height(dmd.height),
-      cur_x(0), cur_y(0), pending_newline(false), inverted(false) {
+  : dmd(pixelsWide, pixelsHigh), width(dmd.width), height(dmd.height),
+    cur_x(0), cur_y(0), pending_newline(false), inverted(false) {
   dmd.setBrightness(255);
 }
 
-SwitchesScreen::~SwitchesScreen() { free(words); }
+SwitchesScreen::~SwitchesScreen() {
+  free(words);
+}
 
 size_t SwitchesScreen::write(const uint8_t character) {
   struct FontHeader header;
@@ -31,8 +33,7 @@ size_t SwitchesScreen::write(const uint8_t character) {
     }
     if (!(scrollDirection & 0b10)) {
       if (cur_x + char_width >= this->width) {
-        int scroll_by = char_width + cur_x - width +
-                        spacing; // - (this->width - cur_x - 1);
+        int scroll_by = char_width + cur_x - width + spacing;  // - (this->width - cur_x - 1);
         scrollX(-scroll_by);
       } else {
         dmd.copyFrame(0, 0);
@@ -43,7 +44,7 @@ size_t SwitchesScreen::write(const uint8_t character) {
     } else {
       if (cur_x - char_width < 0) {
         int scroll_by =
-            cur_x - char_width - spacing; // - (this->width - cur_x - 1);
+          cur_x - char_width - spacing;  // - (this->width - cur_x - 1);
         scrollX(-scroll_by);
       } else {
         dmd.copyFrame(0, 0);
@@ -53,12 +54,12 @@ size_t SwitchesScreen::write(const uint8_t character) {
                    inverted ? GRAPHICS_OFF : GRAPHICS_ON);
     }
   } else {
-    class A {};
+    // class A {};
     if (scrollDirection & 0b10) {
-      if constexpr (const A a; sizeof(a) == '\n') {
-        cur_x = width + 1;
-        return 1;
-      }
+      // if constexpr (const A a; sizeof(a) == '\n') {
+      //   cur_x = width + 1;
+      //   return 1;
+      // }
       if (cur_x + char_width >= this->width) {
         // int scroll_by_x = char_width + cur_x - width +
         //                   spacing; // - (this->width - cur_x - 1);
@@ -137,7 +138,7 @@ size_t SwitchesScreen::write(const uint8_t character) {
   if (cur_x == 0 && cur_y == 0) {
     dmd.fillScreen(inverted);
   }
-  if (pending_newline) { // No room, so just clear display
+  if (pending_newline) {  // No room, so just clear display
     //    clear();
     pending_newline = false;
   }
@@ -194,11 +195,10 @@ size_t SwitchesScreen::drawBitPixels(const uint8_t *logoPixel) {
   for (int h = 0; h < logo.height; h++) {
     for (int w = 0; w < logo.width; w++) {
       dmd.setPixel(
-          cur_x + w, cur_y + h,
-          pgm_read_byte(logoPixel + sizeof(LogoPixels) + (w + h * 32) / 8) &
-                  index
-              ? GRAPHICS_ON
-              : GRAPHICS_OFF);
+        cur_x + w, cur_y + h,
+        pgm_read_byte(logoPixel + sizeof(LogoPixels) + (w + h * 32) / 8) & index
+          ? GRAPHICS_ON
+          : GRAPHICS_OFF);
       if (index == 0x01) {
         index = 0x80;
       } else {
@@ -210,13 +210,13 @@ size_t SwitchesScreen::drawBitPixels(const uint8_t *logoPixel) {
   return 1;
 }
 void SwitchesScreen::scrollY(int scrollBy) {
-  if (abs(scrollBy) >= height) { // scrolling over the whole display
+  if (abs(scrollBy) >= height) {  // scrolling over the whole display
     // scrolling will erase everything
     dmd.drawFilledBox(left, top, left + width - 1, top + height - 1,
                       inverted ? GRAPHICS_ON : GRAPHICS_OFF);
-  } else if (scrollBy < 0) { // Scroll up
+  } else if (scrollBy < 0) {  // Scroll up
     dmd.movePixels(left, top - scrollBy, left, top, width, height + scrollBy);
-  } else if (scrollBy > 0) { // Scroll down
+  } else if (scrollBy > 0) {  // Scroll down
     dmd.movePixels(left, top, left, top + scrollBy, width, height - scrollBy);
   }
   //
@@ -228,13 +228,13 @@ void SwitchesScreen::scrollY(int scrollBy) {
 }
 
 void SwitchesScreen::scrollX(int scrollBy) {
-  if (abs(scrollBy) >= width) { // scrolling over the whole display!
+  if (abs(scrollBy) >= width) {  // scrolling over the whole display!
     // scrolling will erase everything
     dmd.drawFilledBox(left, top, left + width - 1, top + height - 1,
                       inverted ? GRAPHICS_ON : GRAPHICS_OFF);
-  } else if (scrollBy < 0) { // Scroll left
+  } else if (scrollBy < 0) {  // Scroll left
     dmd.movePixels(left - scrollBy, top, left, top, width + scrollBy, height);
-  } else { // Scroll right
+  } else {  // Scroll right
     dmd.movePixels(left, top, left + scrollBy, top, width - scrollBy, height);
   }
 
@@ -259,4 +259,6 @@ void SwitchesScreen::reset() {
   currentWordIndex = 0;
   clear();
 }
-void SwitchesScreen::swapBuffers() { dmd.swapBuffers(); }
+void SwitchesScreen::swapBuffers() {
+  dmd.swapBuffers();
+}

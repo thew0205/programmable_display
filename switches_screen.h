@@ -11,8 +11,8 @@
 #define EEPROM_SCROLL_DIRECTION_ADDRESS EEPROM_TIME_ADDRESS + 1
 #define EEPROM_FONT_ADDRESS EEPROM_SCROLL_DIRECTION_ADDRESS + 1
 #define WORD_SIZE_INCREMENTAL (5)
-const uint8_t *const FONTS[] PROGMEM = {Arial14, Arial_Black_16, SystemFont5x7,
-                                        Droid_Sans_12};
+const uint8_t *const FONTS[] PROGMEM = { Arial14, Arial_Black_16, SystemFont5x7,
+                                         Droid_Sans_12 };
 enum class CommandError {
   undefined,
   authorizationFailed,
@@ -33,17 +33,17 @@ struct Pair {
 
 class SwitchesScreen : public Print {
 public:
-  SPIDMD dmd; // DMD controls the entire display
-  int16_t cur_x;
-  int16_t cur_y;
+  SPIDMD dmd;  // DMD controls the entire display
+  int16_t cur_x{ 0 };
+  int16_t cur_y{ 0 };
   int width;
   int height;
-  int left{0};
-  uint8_t spacing{0};
-  int top{0};
-  bool pending_newline{false};
+  int left{ 0 };
+  uint8_t spacing{ 0 };
+  int top{ 0 };
+  bool pending_newline{ false };
   bool inverted;
-  uint8_t scrollDirection{1};
+  uint8_t scrollDirection{ 1 };
   uint8_t fontIndex;
   size_t write(uint8_t character);
   size_t drawBitPixels(const uint8_t *logoPixel);
@@ -56,18 +56,18 @@ public:
   void setMemory();
   CommandError parseData(const String &data);
   String incomingData;
-  bool incomingDataComplete{false};
+  bool incomingDataComplete{ false };
 
-  unsigned int wordBufferSize{0};
-  unsigned int currentWordIndex{0};
-  String *words{NULL};
-  unsigned int numberOfWords{0};
-  unsigned int currentLetterIndex{0};
-  unsigned int currentWordLen{0};
-  uint16_t eepromCurrentWordAddress{0};
+  unsigned int wordBufferSize{ 0 };
+  unsigned int currentWordIndex{ 0 };
+  String *words{ NULL };
+  unsigned int numberOfWords{ 0 };
+  unsigned int currentLetterIndex{ 0 };
+  unsigned int currentWordLen{ 0 };
+  uint16_t eepromCurrentWordAddress{ 0 };
   String currentWord;
-  bool nextWord{false};
-  unsigned int delayTime_ms{50};
+  bool nextWord{ false };
+  unsigned int delayTime_ms{ 50 };
   bool authorization(const String &password);
   bool appendWord(const String &newWord);
   bool changeWord(const String &newWord, unsigned int index);
@@ -83,29 +83,82 @@ public:
   bool changeFont(const String &font);
   bool changeSpacing(const String &tempSpacing);
 
-    void reset();
-    void clear();
-    void swapBuffers();
+  void reset();
+  void clear();
+  void swapBuffers();
 
-    void mainLoop();
+  void mainLoop();
 
-    bool init();
+  bool init();
 
-    SwitchesScreen(uint8_t pixelsWide, uint8_t pixelsHigh);
-    ~SwitchesScreen();
-  };
+  SwitchesScreen(uint8_t pixelsWide, uint8_t pixelsHigh);
+  ~SwitchesScreen();
+};
 static const uint8_t SwitchesLogo[] PROGMEM = {
-    0x20, // width
-    0x20, // height
-    0b00000000, 0b01111111, 0b10000000, 0b00010000, 0b00011111, 0b11111111,
-    0b11010000, 0b00110000, 0b00000000, 0b00011111, 0b11111111, 0b00010000,
-    0b00000011, 0b11111111, 0b11010100, 0b00010000, 0b00000010, 0b01111111,
-    0b10000100, 0b00111000, 0b00000001, 0b00000000, 0b00001000, 0b00000000,
-    0b00000000, 0b11111001, 0b11110000, 0b00000000, 0b00000000, 0b00000110,
-    0b00000000, 0b00000000, 0b00000000, 0b00000110, 0b00000000, 0b00000000,
-    0b00000000, 0b11111001, 0b11110000, 0b00000000, 0b00000001, 0b00000000,
-    0b00001000, 0b00000000, 0b00000010, 0b01111111, 0b10000100, 0b00110000,
-    0b00000011, 0b11111111, 0b11010100, 0b01001000, 0b00000000, 0b01111111,
-    0b11111111, 0b01001000, 0b00011111, 0b11111111, 0b11010000, 0b01001000,
-    0b00000000, 0b01111111, 0b10000000, 0b00110000,
+  0x20,  // width
+  0x20,  // height
+  0b00000000,
+  0b01111111,
+  0b10000000,
+  0b00010000,
+  0b00011111,
+  0b11111111,
+  0b11010000,
+  0b00110000,
+  0b00000000,
+  0b00011111,
+  0b11111111,
+  0b00010000,
+  0b00000011,
+  0b11111111,
+  0b11010100,
+  0b00010000,
+  0b00000010,
+  0b01111111,
+  0b10000100,
+  0b00111000,
+  0b00000001,
+  0b00000000,
+  0b00001000,
+  0b00000000,
+  0b00000000,
+  0b11111001,
+  0b11110000,
+  0b00000000,
+  0b00000000,
+  0b00000110,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b00000110,
+  0b00000000,
+  0b00000000,
+  0b00000000,
+  0b11111001,
+  0b11110000,
+  0b00000000,
+  0b00000001,
+  0b00000000,
+  0b00001000,
+  0b00000000,
+  0b00000010,
+  0b01111111,
+  0b10000100,
+  0b00110000,
+  0b00000011,
+  0b11111111,
+  0b11010100,
+  0b01001000,
+  0b00000000,
+  0b01111111,
+  0b11111111,
+  0b01001000,
+  0b00011111,
+  0b11111111,
+  0b11010000,
+  0b01001000,
+  0b00000000,
+  0b01111111,
+  0b10000000,
+  0b00110000
 };

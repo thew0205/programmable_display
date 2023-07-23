@@ -4,6 +4,7 @@
 #include <EEPROM.h>
 
 #define DEBUG 0
+
 bool updateEEPROM(unsigned int index, uint8_t data) {
   if (index >= 0 && index < EEPROM.length()) {
     EEPROM.update(index, data);
@@ -12,14 +13,15 @@ bool updateEEPROM(unsigned int index, uint8_t data) {
   return false;
 }
 bool readAllEEPROM() {
-  for (int index = 0; index < 100; index++) {
+  for (int index = 0; index < 50; index++) {
     Serial.print(index);
     Serial.print(": ");
     Serial.println(EEPROM.read(index));
-    //    return true;
   }
-  return false;
+  return true;
 }
+
+
 int parsing(const String &incomingData, Pair *infos, int count) {
   Serial.println("parsing");
   String data[count];
@@ -55,7 +57,7 @@ int parsing(const String &incomingData, Pair *infos, int count) {
 }
 bool SwitchesScreen::authorization(const String &password) {
   Serial.println("authorization");
-  char authPassword[5] = {0};
+  char authPassword[5] = { 0 };
   for (int i = 0; i < 4; i++) {
     authPassword[i] = (char)EEPROM.read(i);
   }
@@ -155,7 +157,7 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
   if (count < 3)
     return CommandError::undefined;
 
-  //  from = 0;
+    //  from = 0;
 #if DEBUG
   Serial.print("count");
   Serial.print(": ");
@@ -166,8 +168,6 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
   {
     if (count != parsing(incomingData, infos, count)) {
       Serial.println(parsing(incomingData, infos, count));
-      //      delay(1000);
-      //      resetFunc();
     }
   }
 
@@ -176,8 +176,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
       if (infos[1].value == "a") {
         if (infos[2].key == "w") {
           CommandError error = appendFunction(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::noWord;
+                                 ? CommandError::success
+                                 : CommandError::noWord;
           return error;
         } else {
           return CommandError::undefined;
@@ -188,8 +188,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
           unsigned int position = infos[2].value.toInt();
           if (position > 0 && position <= numberOfWords) {
             CommandError error = changeFunction(infos[3].value, position - 1)
-                                 ? CommandError::success
-                                 : CommandError::unSuccess;
+                                   ? CommandError::success
+                                   : CommandError::unSuccess;
             return error;
           } else {
             return CommandError::invalidIndex;
@@ -203,8 +203,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
           unsigned int position = infos[2].value.toInt();
           if (position > 0 && position <= numberOfWords) {
             CommandError error = insertFunction(infos[3].value, position - 1)
-                                 ? CommandError::success
-                                 : CommandError::unSuccess;
+                                   ? CommandError::success
+                                   : CommandError::unSuccess;
             return error;
           } else {
             return CommandError::invalidIndex;
@@ -218,8 +218,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
           unsigned int position = infos[2].value.toInt();
           if (position > 0 && position <= numberOfWords) {
             CommandError error = deleteFunction(position - 1)
-                                 ? CommandError::success
-                                 : CommandError::unSuccess;
+                                   ? CommandError::success
+                                   : CommandError::unSuccess;
             return error;
           } else {
             return CommandError::invalidIndex;
@@ -233,8 +233,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
             return CommandError::passwordLengthError;
           }
           CommandError error = setPassword(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::unSuccess;
+                                 ? CommandError::success
+                                 : CommandError::unSuccess;
           return error;
           ;
         } else {
@@ -244,8 +244,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
         if (infos[2].key == "t") {
           Serial.println(infos[2].value);
           CommandError error = setDelayTime(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::invalidTime;
+                                 ? CommandError::success
+                                 : CommandError::invalidTime;
           return error;
         } else {
           return CommandError::undefined;
@@ -254,8 +254,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
         if (infos[2].key == "s") {
           Serial.println(infos[2].value);
           CommandError error = setScrollDirection(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::invalidDirection;
+                                 ? CommandError::success
+                                 : CommandError::invalidDirection;
           return error;
         } else {
           return CommandError::undefined;
@@ -264,8 +264,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
         if (infos[2].key == "f") {
           Serial.println(infos[2].value);
           CommandError error = changeFont(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::invalidDirection;
+                                 ? CommandError::success
+                                 : CommandError::invalidDirection;
           return error;
         } else {
           return CommandError::undefined;
@@ -274,8 +274,8 @@ CommandError SwitchesScreen::parseData(const String &incomingData) {
         if (infos[2].key == "n") {
           Serial.println(infos[2].value);
           CommandError error = changeSpacing(infos[2].value)
-                               ? CommandError::success
-                               : CommandError::invalidDirection;
+                                 ? CommandError::success
+                                 : CommandError::invalidDirection;
           return error;
         } else {
           return CommandError::undefined;
@@ -332,7 +332,6 @@ bool SwitchesScreen::appendWord(const String &newWord) {
   // }
 
   unsigned int tempEepromAddress = EEPROM_STARTING_ADDRESS;
-  ;
   tempEepromAddress++;
   for (uint8_t i = 0; i < numberOfWords; i++) {
 #if DEBUG
@@ -728,9 +727,14 @@ void SwitchesScreen::setMemory() {
 
 bool SwitchesScreen::init() {
   Serial.println("init");
-//  clearMemory();
+  // clearMemory();
   dmd.clearScreen();
-  delayTime_ms = (EEPROM.read(EEPROM_TIME_ADDRESS) + 1) * 20;
+  if (EEPROM.read(EEPROM_TIME_ADDRESS) == 0) {
+    delayTime_ms = 10 * 20;
+  } else {
+    delayTime_ms = (EEPROM.read(EEPROM_TIME_ADDRESS) + 1) * 20;
+  }
+
   scrollDirection = EEPROM.read(EEPROM_SCROLL_DIRECTION_ADDRESS);
   fontIndex = EEPROM.read(EEPROM_FONT_ADDRESS);
   cur_x = 0;
@@ -741,7 +745,7 @@ bool SwitchesScreen::init() {
     eepromCurrentWordAddress = EEPROM_STARTING_ADDRESS + 1;
     currentWordLen = (int)EEPROM.read(eepromCurrentWordAddress);
     eepromCurrentWordAddress++;
-    char letters[currentWordLen + 1] = {0};
+    char letters[currentWordLen + 1] = { 0 };
     //    Serial.println(eepromCurrentWordAddress);
     for (int j = 0; j < currentWordLen; j++) {
       letters[j] = EEPROM.read(eepromCurrentWordAddress);
@@ -810,70 +814,110 @@ bool SwitchesScreen::init() {
 }
 
 void SwitchesScreen::mainLoop() {
-  while (true) {
-    input();
-    unsigned int elapsedTime = millis() - perviousTime;
-    if (elapsedTime > delayTime_ms) {
+  input();
+  unsigned int elapsedTime = millis() - perviousTime;
+  if (elapsedTime > delayTime_ms) {
 
-      update(elapsedTime);
-      perviousTime = millis();
-    }
+    update(elapsedTime);
+    perviousTime = millis();
   }
 }
 
 void SwitchesScreen::update(unsigned int elapsedTime) {
   static uint8_t delayNextWord = 1;
 
-  if (!nextWord) {
-    if (currentWordIndex < numberOfWords) {
+  if (numberOfWords == 0) {
+    if (!nextWord) {
       if (currentLetterIndex < currentWordLen) {
         render(currentWord.charAt(currentLetterIndex));
         currentLetterIndex++;
       } else {
         nextWord = true;
         delayNextWord = 1;
+
+        currentWordIndex = 0;
         currentLetterIndex = 0;
-        currentWordIndex++;
+        currentWord = "Input word to display";
+        currentWordLen = currentWord.length();
+      }
+    } else {
+      if (delayNextWord % 8 != 0) {
+        delayNextWord++;
+      } else {
+        render('\n');
+        nextWord = false;
+        // delay(100);
+      }
+    }
+
+
+  } else {
+    if (!nextWord) {
+      if (currentWordIndex == 0 && currentLetterIndex == 0) {
+        render('\n');
+      }
+      if (currentWordIndex < numberOfWords) {
+
+        if (currentLetterIndex < currentWordLen) {
+          render(currentWord.charAt(currentLetterIndex));
+          currentLetterIndex++;
+        } else {
+          nextWord = true;
+          delayNextWord = 1;
+          currentLetterIndex = 0;
+          currentWordIndex++;
+          currentWordLen = (int)EEPROM.read(eepromCurrentWordAddress);
+          eepromCurrentWordAddress++;
+          char letters[currentWordLen + 1] = { 0 };
+          for (int j = 0; j < currentWordLen; j++) {
+            letters[j] = EEPROM.read(eepromCurrentWordAddress);
+
+            //          Serial.print(letters[j]);
+            //          Serial.print(": ");
+            //          Serial.println(currentWordIndex);
+            eepromCurrentWordAddress++;
+          }
+          currentWord = letters;
+        }
+      } else {
+        currentWordIndex = 0;
+        currentLetterIndex = 0;
+        eepromCurrentWordAddress = EEPROM_STARTING_ADDRESS + 1;
         currentWordLen = (int)EEPROM.read(eepromCurrentWordAddress);
         eepromCurrentWordAddress++;
-        char letters[currentWordLen + 1] = {0};
+        char letters[currentWordLen + 1] = { 0 };
         for (int j = 0; j < currentWordLen; j++) {
           letters[j] = EEPROM.read(eepromCurrentWordAddress);
-
-          //          Serial.print(letters[j]);
-          //          Serial.print(": ");
-          //          Serial.println(currentWordIndex);
+          //
+          //        Serial.print(letters[j]);
+          //        Serial.print(": ");
+          //        Serial.println(currentWordLen);
           eepromCurrentWordAddress++;
         }
         currentWord = letters;
       }
     } else {
-      currentWordIndex = 0;
-      currentLetterIndex = 0;
-      eepromCurrentWordAddress = EEPROM_STARTING_ADDRESS + 1;
-      currentWordLen = (int)EEPROM.read(eepromCurrentWordAddress);
-      eepromCurrentWordAddress++;
-      char letters[currentWordLen + 1] = {0};
-      for (int j = 0; j < currentWordLen; j++) {
-        letters[j] = EEPROM.read(eepromCurrentWordAddress);
-        //
-        //        Serial.print(letters[j]);
-        //        Serial.print(": ");
-        //        Serial.println(currentWordLen);
-        eepromCurrentWordAddress++;
-      }
-      currentWord = letters;
-    }
-  } else {
 
-    if (delayNextWord % 8 != 0) {
-      delayNextWord++;
-    } else {
-      render('\n');
-      nextWord = false;
-      // delay(100);
+      if (delayNextWord % 8 != 0) {
+        delayNextWord++;
+      } else {
+        render('\n');
+        nextWord = false;
+        // delay(100);
+      }
     }
   }
+
+
+
+  // if (numberOfWords == 0) {
+  //   currentWordIndex = 0;
+  //   currentLetterIndex = 0;
+  //   // eepromCurrentWordAddress = EEPROM_STARTING_ADDRESS + 1;
+  //   currentWord = "Welcome, input word to display";
+  //   currentWordLen = currentWord.length();
+  // }
+
 
   // if (!nextWord) {
 
@@ -913,13 +957,12 @@ void SwitchesScreen::render(uint8_t character) {
     write(character);
   }
   swapBuffers();
-
 }
 
 void SwitchesScreen::input() {
   int availableData = Serial.available();
   if (availableData) {
-    char dataChar[availableData + 1] = {0};
+    char dataChar[availableData + 1] = { 0 };
     for (int i = 0; i < availableData; i++) {
       dataChar[i] = Serial.read();
       if (dataChar[i] == '\r') {

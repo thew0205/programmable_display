@@ -99,7 +99,6 @@ class DMD_TextBox;
 class DMDFrameDoubleBuffer
 {
     friend class DMD_TextBox;
-    friend class SwitchesScreen;
   public:
     DMDFrameDoubleBuffer(byte pixelsWide, byte pixelsHigh);
     DMDFrameDoubleBuffer(const DMDFrameDoubleBuffer &source);
